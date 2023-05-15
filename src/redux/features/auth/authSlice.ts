@@ -1,4 +1,4 @@
-import axios from "@/utils/axios";
+import { getDiscordUser } from "@/services/authService";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 type User = {
@@ -30,14 +30,7 @@ const initialState = {
 
 
 export const fetchDiscordUser = createAsyncThunk('auth/fetchDiscordUser', async (token: string) => {
-    const headers = { Authorization: `Bearer ${token}` }
-    try {
-        const response = await axios.get('/api/auth/user', { headers });
-        const user = response.data;
-        return user;
-    } catch (error) {
-        console.error(error);
-    }
+    return await getDiscordUser(token);
 })
 
 export const authSlice = createSlice({
