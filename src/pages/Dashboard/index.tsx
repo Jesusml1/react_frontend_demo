@@ -22,7 +22,7 @@ function Dashboard() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedLevel, setSelectedLevel] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState(RoleNames.TRYOUT);
   const { user } = useUserAuth();
 
   function fetchMessages() {
@@ -45,7 +45,6 @@ function Dashboard() {
   useEffect(() => {
     const token = searchParams.get("t");
     if (token) navigate("/dashboard");
-    setSelectedLevel(RoleNames.TRYOUT);
   }, []);
 
   useEffect(() => {
