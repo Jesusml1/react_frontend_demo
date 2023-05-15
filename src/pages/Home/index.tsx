@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 import RandomNumbersDisplay from "./components/RandomNumbersDisplay";
 import Pointer from "./components/Pointer/Pointer";
 import DisplayBorders from "./components/DisplayBorders";
-import PhaseLabel from "./components/PhaseLabel";
-import HomeNav from "./components/HomeNav";
 import TientoInit from "./components/TientoInit";
-import TientoHero from "./components/TientoHero";
 import ScreenOverlay from "./components/ScreenOverlay";
 import BackgroundVideoOverlay from "./components/BackgroundVideoOverlay";
+import TientoHome from "./components/TientoHome";
 
 const generalBackgroundColor = "rgb(20, 20, 20)";
 
@@ -52,19 +50,22 @@ function Home() {
         <ScreenOverlay />
 
         <DisplayBorders>
-          {showLanding === false && (
+          {showLanding ? (
+            <TientoHome setIsHovered={setIsHovered} />
+          ) : (
             <TientoInit
               handleShowLanding={handleShowLanding}
               setIsHovered={setIsHovered}
             />
           )}
-          {showLanding && <PhaseLabel setIsHovered={setIsHovered} />}
-          {showLanding && <HomeNav setIsHovered={setIsHovered} />}
-          {showLanding && <TientoHero setIsHovered={setIsHovered} />}
         </DisplayBorders>
 
-        {showLanding && <RandomNumbersDisplay />}
-        {showLanding && <BackgroundVideoOverlay />}
+        {showLanding && (
+          <>
+            <RandomNumbersDisplay />
+            <BackgroundVideoOverlay />
+          </>
+        )}
       </HomeContainer>
 
       <Pointer isHovered={isHovered} />
