@@ -1,45 +1,24 @@
-import { useState, useEffect } from 'react';
-import axios from '@/utils/axios';
+import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-
-interface DiscordUser {
-    username: string;
-    id: string;
-    avatar: string;
-    avatarUrl: string;
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDiscordUser, logoutUser } from '@/redux/features/auth/authSlice';
+import { AppDispatch, RootState } from '@/redux/store';
 
 export const useUserAuth = () => {
-    const [user, setUser] = useState<DiscordUser | null>(null);
+    const user = useSelector((state: RootState) => state.auth.user);
     const [searchParams] = useSearchParams();
     const token = searchParams.get('t');
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
     useEffect(() => {
-        const discordUserInfo = localStorage.getItem('discord_user_info');
-        const userInfo = localStorage.getItem('user');
-        if (discordUserInfo) {
-            setUser(JSON.parse(discordUserInfo))
-        }
-
         if (token) {
-            axios.get('/api/auth/user', {
-                headers: { Authorization: `Bearer ${token}` }
-            }).then(response => {
-                const user = response.data;
-                setUser(user);
-                localStorage.setItem('discord_user_info', JSON.stringify(user));
-            }).catch(error => {
-                console.error(error);
-                localStorage.removeItem('discord_user_info');
-            });
+            dispatch(fetchDiscordUser(token))
         }
     }, [token]);
 
     const handleLogout = () => {
-        setUser(null);
-        localStorage.removeItem('user');
-        localStorage.removeItem('discord_user_info');
+        dispatch(logoutUser())
         navigate('/');
     };
 
